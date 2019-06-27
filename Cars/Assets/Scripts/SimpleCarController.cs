@@ -4,10 +4,28 @@ using UnityEngine;
 
 public class SimpleCarController : MonoBehaviour {
 
+	public UDPReceiver updReceiver;
+
+	void Start () {
+		UDPReceiver.PedalCallBack  += PedalAction;
+		UDPReceiver.HandleCallBack  += HandleAction;
+		updReceiver.UDPStart ();
+	}
+
+	public void PedalAction(int x){
+		pedal = Mathf.Min(Mathf.Max(1.0f * (x - minPedal ) / (maxPedal-minPedal), 0.0f), 1.0f);
+	}
+
+	public void HandleAction(int x){
+		handle = Mathf.Min(Mathf.Max(-1.0f * x / maxHandle, -1.0f), 1.0f);
+	}
+
 	public void GetInput()
 	{
-		m_horizontalInput = Input.GetAxis("Horizontal");
-		m_verticalInput = Input.GetAxis("Vertical");
+		// m_horizontalInput = Input.GetAxis("Horizontal");
+		// m_verticalInput = Input.GetAxis("Vertical");
+		m_horizontalInput = handle;
+		m_verticalInput = pedal;
 	}
 
 	private void Steer()
@@ -49,6 +67,13 @@ public class SimpleCarController : MonoBehaviour {
 		Accelerate();
 		UpdateWheelPoses();
 	}
+
+	private float pedal;
+	private float handle;
+
+	private int maxPedal = -14;
+	private int minPedal = -34;
+	private int maxHandle = 70;
 
 	private float m_horizontalInput;
 	private float m_verticalInput;

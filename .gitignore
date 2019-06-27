@@ -1,0 +1,5 @@
+/Cars/.vscode
+/Cars/Library
+/Cars/Temp
+*.csproj
+*.sln
